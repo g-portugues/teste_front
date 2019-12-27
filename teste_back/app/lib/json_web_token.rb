@@ -1,5 +1,5 @@
 class JsonWebToken
-  SECRET_KEY = 'TESTE_BACK_END'
+  SECRET_KEY = 'TEST_BACK_END'
 
   def self.encode(payload, exp = 1.hour.from_now)
     payload[:exp] = exp.to_i
