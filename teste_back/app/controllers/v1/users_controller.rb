@@ -4,7 +4,6 @@ module V1
 
     def index
       @users = User.all
-      pp @users.to_json
       paginate json: @users
     end
 
@@ -32,11 +31,11 @@ module V1
 
     def update
       begin
-        if @user.update(usuario_params)
-          render json: @usuario, status: :ok
+        if @user.update(update_params)
+          render json: @user, status: :ok
         else
-          render json: { errors: @usuario.errors.full_messages },
-                status: :unprocessable_entity
+          render json: { errors: @user.errors.full_messages },
+                 status: :unprocessable_entity
         end
       rescue ::Errors::InvalidParametersError => e
         render json: e.message, status: :bad_request
@@ -50,7 +49,7 @@ module V1
     private
 
       def set_user
-        @user = User.find_by_public_id(param[:id])
+        @user = User.find_by_public_id(params[:id])
       end
 
       def create_params

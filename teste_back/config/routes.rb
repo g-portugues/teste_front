@@ -8,16 +8,10 @@ Rails.application.routes.draw do
       :value => 'application/vnd.testbackend.com.br; version=1'
     }
   ) do    
-    resources :users
-  end
-
-  api_version(
-    module: 'V1',
-    :header => {
-      :name => 'Accept',
-      :value => 'application/vnd.testbackend.com.br; version=1'
-    }
-  ) do   
     post '/auth/login', to: 'authentication#login'
+    resources :users
+    resources :books
+    resources :authors
+    resources :publishers
   end
 end

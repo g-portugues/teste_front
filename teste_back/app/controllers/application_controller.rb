@@ -1,19 +1,21 @@
 class ApplicationController < ActionController::API
+  include ActionController::HttpAuthentication::Token::ControllerMethods
+  before_action :authorize_request
+
   def authorize_request
-    before_action :authorize_request
     begin
-      header = request.headers['Authorization']
-      header = header.split(' ').last if header
-      @decoded = JsonWebToken.decode(header)
-      @current_user = Usuario.find_by_public_id(@decoded[:usuario_public_id].to_s)
-      unless @current_user
-        render status: :unauthorized
+      authenticate_or_request_with_http_token do |token, options|
+        @decoded = JsonWebToken.decode(token)
+        @current_user = User.find_by_public_id(@decoded[:user_public_id].to_s)
+        unless @current_user          
+          render status: :unauthorized
+          return
+        end
         return
       end
-      @garagem = @current_user.garagens.last
-    rescue JWT::ExpiredSignature => e
+    rescue JWT::ExpiredSignature
       render status: :unauthorized
-    rescue JWT::DecodeError => e
+    rescue JWT::DecodeError
       render status: :unauthorized
     end
   end

@@ -1,0 +1,2 @@
+class Order < BaseModel
+end
